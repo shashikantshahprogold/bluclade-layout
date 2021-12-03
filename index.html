@@ -8,8 +8,15 @@
     <title>Document</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/css/intlTelInput.min.css" />
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/js/utils.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,300&display=swap');
         html {
@@ -24,6 +31,15 @@
         /* body {
             background: #F2F3EB;
         } */
+        
+        .iti--allow-dropdown input,
+        .iti--allow-dropdown input[type=tel],
+        .iti--allow-dropdown input[type=text],
+        .iti--separate-dial-code input,
+        .iti--separate-dial-code input[type=tel],
+        .iti--separate-dial-code input[type=text] {
+            padding-right: 220px;
+        }
         
         button {
             overflow: visible;
@@ -95,6 +111,10 @@
         .company_name {
             float: right;
             width: 45%;
+        }
+        
+        .hide {
+            display: none;
         }
         
         input[type='text'],
@@ -238,6 +258,14 @@
             .text-align {
                 text-align: justify;
             }
+            .iti--allow-dropdown input,
+            .iti--allow-dropdown input[type=tel],
+            .iti--allow-dropdown input[type=text],
+            .iti--separate-dial-code input,
+            .iti--separate-dial-code input[type=tel],
+            .iti--separate-dial-code input[type=text] {
+                padding-right: 0px;
+            }
         }
         
         @media screen and (max-width: 420px) {
@@ -261,6 +289,14 @@
             textarea {
                 font-size: 0.875em;
             }
+            .iti--allow-dropdown input,
+            .iti--allow-dropdown input[type=tel],
+            .iti--allow-dropdown input[type=text],
+            .iti--separate-dial-code input,
+            .iti--separate-dial-code input[type=tel],
+            .iti--separate-dial-code input[type=text] {
+                padding-right: 0px;
+            }
         }
     </style>
     <script type="text/javascript">
@@ -280,6 +316,8 @@
             });
         });
     </script>
+
+
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
@@ -297,6 +335,7 @@
         });
     }
 </script>
+
 
 <body>
 
@@ -321,7 +360,8 @@
                 <input type="text" placeholder="Company Name*" name="Company_Name" id="company_name_input" required>
 
             </div>
-            <div class="country">
+
+            <!-- <div class="country">
                 <label for="country"></label>
 
                 <select placeholder="Country*" name="Country" id="subject_input" required>
@@ -521,17 +561,21 @@
                     <option value="Zambia">Zambia</option>
                     <option value="Zimbabwe">Zimbabwe</option>
                 </select>
+            </div> -->
+            <div hidden>
+                <input type="text" name="CountryCode" id="countryCode">
+                <input type="text" name="DialCode" id="dialCode">
             </div>
             <div class="phone_number">
                 <label for="phone_number"></label>
-                <input type="tel" placeholder="Phone Number*" name="Phone_Number" id="telephone_input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
-
+                <input type="tel" placeholder="Phone No.*" name="Phone_Number" id="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                <span id="valid-msg" class="hide" style="color: green;">✓ Valid</span>
+                <span id="error-msg" class="hide" style="color: red;"></span>
             </div>
             <div class="email">
                 <label for="email"></label>
                 <input type="email" placeholder="Email*" name="Email" id="email_input" required>
             </div>
-
 
 
             <div class="message">
@@ -545,10 +589,9 @@
                     us, the transmission of which is implicit in the use of Internet communication protocols. We would
                     like to contact you about our products and services, as well as offers and discounts that may be of
                     interest to you.</small>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <input type="checkbox" name="I_Agreed" value="Yes,_I_Agreed" id="agree" required> &nbsp; &nbsp;I have read and agreed to the Terms and Conditions and Privacy Policy
-
             </div>
 
             <div class="submit">
@@ -556,6 +599,71 @@
             </div>
         </form>
         <!-- // End form -->
+        <script>
+            // var input = document.querySelector("#phone");
+            // intlTelInput(input, {
+            //     initialCountry: "auto",
+            //     geoIpLookup: function(success, failure) {
+            //         $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+            //             var countryCode = (resp && resp.country) ? resp.country : "us";
+            //             success(countryCode);
+            //         });
+            //     },
+            // });
+
+            var input = document.querySelector("#phone"),
+                errorMsg = document.querySelector("#error-msg"),
+                validMsg = document.querySelector("#valid-msg");
+
+            // Error messages based on the code returned from getValidationError
+            var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+            // Initialise plugin
+            var intl = window.intlTelInput(input, {
+                // utilsScript: "js/utils.js"
+                initialCountry: "auto",
+                geoIpLookup: function(success, failure) {
+                    $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : "us";
+                        success(countryCode);
+                    });
+                },
+            });
+
+            var reset = function() {
+                input.classList.remove("error");
+                errorMsg.innerHTML = "";
+                errorMsg.classList.add("hide");
+                validMsg.classList.add("hide");
+            };
+
+            // Validate on blur event
+            input.addEventListener('blur', function() {
+                reset();
+                if (input.value.trim()) {
+                    if (intl.isValidNumber()) {
+                        validMsg.classList.remove("hide");
+                        // var getName = intl.selectedCountryData['name'];
+                        var getName = intl['b']['dataset']['countryCode']
+                        var getCode = intl['b']['dataset']['dialCode'];
+                        // $('#countryCode').val("");
+                        $('#countryCode').val(getName);
+                        // $('#dialCode').val("");
+                        $('#dialCode').val(getCode);
+
+                    } else {
+                        input.classList.add("error");
+                        var errorCode = intl.getValidationError();
+                        errorMsg.innerHTML = errorMap[errorCode];
+                        errorMsg.classList.remove("hide");
+                    }
+                }
+            });
+
+            // Reset on keyup/change event
+            input.addEventListener('change', reset);
+            input.addEventListener('keyup', reset);
+        </script>
     </div>
     <!-- // End #container -->
 </body>
