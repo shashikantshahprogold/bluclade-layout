@@ -577,7 +577,6 @@
                 <input type="email" placeholder="Email*" name="Email" id="email_input" required>
             </div>
 
-
             <div class="message">
                 <label for="message"></label>
                 <textarea name="Message" placeholder="Message" id="message_input" cols="30" rows="3"></textarea>
@@ -593,24 +592,19 @@
                 <br />
                 <input type="checkbox" name="I_Agreed" value="Yes,_I_Agreed" id="agree" required> &nbsp; &nbsp;I have read and agreed to the Terms and Conditions and Privacy Policy
             </div>
+            <div hidden>
+                <input id="date" name="Date">
+            </div>
 
             <div class="submit">
                 <input type="submit" value="Send Message" id="form_button" onclick='SubForm()' />
             </div>
         </form>
         <!-- // End form -->
+        <script type="text/javascript">
+            document.getElementById('date').value = Date();
+        </script>
         <script>
-            // var input = document.querySelector("#phone");
-            // intlTelInput(input, {
-            //     initialCountry: "auto",
-            //     geoIpLookup: function(success, failure) {
-            //         $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-            //             var countryCode = (resp && resp.country) ? resp.country : "us";
-            //             success(countryCode);
-            //         });
-            //     },
-            // });
-
             var input = document.querySelector("#phone"),
                 errorMsg = document.querySelector("#error-msg"),
                 validMsg = document.querySelector("#valid-msg");
