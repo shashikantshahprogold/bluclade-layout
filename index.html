@@ -145,6 +145,43 @@
             transition: all 0.3s;
         }
         
+        .error {
+            outline: none;
+            border: none;
+            border-bottom: solid 2px red !important;
+            color: #474544;
+            font-size: 1.000em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            /* margin: 0em 0 1.875em 0; */
+            /* padding: 0 0 0.875em 0; */
+            /* text-transform: uppercase; */
+            /* width: 100%; */
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            -o-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        
+        #I_Agreed-error {
+            color: red !important;
+        }
+        
+        .Red::placeholder {
+            color: red !important;
+            /* Modern browsers */
+        }
+        
+        .checkbox-color {
+            outline: 1.5px solid red !important;
+        }
+        
         input[type='text']:focus,
         [type='email']:focus,
         [type='tel']:focus,
@@ -299,40 +336,111 @@
             }
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("form[name='contact_form']").validate({
-                rules: {
-                    name: "required",
-                    company_name: "required",
-                },
-                messages: {
-                    name: "Please enter your name",
-                    company_name: "Please enter your company name",
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
+
+
+            // $('#contact_form').validate({
+            //     rules: {
+            //         Name: 'required',
+            //         Company_Name: 'required',
+            //         Phone_Number: 'required',
+            //         Email: {
+            //             required: true,
+            //             email: true,
+            //             maxlength: 255,
+            //         },
+            //         'I_Agreed': {
+            //             required: true,
+            //         }
+            //     },
+            //     messages: {
+            //         Name: 'This field is required',
+            //         Company_Name: 'This field is required',
+            //         Phone_Number: 'This field is required',
+            //         Email: 'Enter a valid email',
+            //         I_Agreed: 'Plese select this box if you want proceed.'
+            //     },
+            //     errorPlacement: function(error, element) {
+            //         $(element).addClass("error Red");
+            //         // $('input#name_input.error').addClass("error Red");
+            //         // $('input#company_name_input.error').addClass("error Red");
+            //         // $('input#phone.error').addClass("error Red");
+            //         // $('input#email_input.error').addClass("error Red");
+            //         // $('input#agree.error.Red,label').addClass("error Red");
+            //         // $('input#agree.error.Red,label#required').prepend("<b style='color:red;''>Please select this box</b>");
+            //         if (element.attr("type") == "checkbox") {
+            //             $(element).addClass("checkbox-color")
+            //             error.insertBefore($(element).next($('#required')));
+            //         } else {}
+            //     },
+            //     submitHandler: function(form) {
+            //         form.submit();
+            //     },
+            // });
         });
     </script>
 
-
 </head>
-<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script>
     function SubForm() {
-        $.ajax({
-            url: "https://api.apispreadsheets.com/data/20947/",
-            type: "post",
-            data: $("#contact_form").serializeArray(),
-            success: function() {
-                alert("Form Data Submitted :)")
+        $('#contact_form').validate({
+            rules: {
+                Name: 'required',
+                Company_Name: 'required',
+                Phone_Number: 'required',
+                Valid_Invalid: {
+                    equalTo: '#msf-input-equalto',
+                },
+                Email: {
+                    required: true,
+                    email: true,
+                    maxlength: 255,
+                },
+                'I_Agreed': {
+                    required: true,
+                }
             },
-            error: function() {
-                alert("There was an error :(")
-            }
+            messages: {
+                Name: 'This field is required',
+                Company_Name: 'This field is required',
+                Phone_Number: 'This field is required',
+                Email: 'Enter a valid email',
+                I_Agreed: 'Plese select this box if you want proceed.'
+            },
+            errorPlacement: function(error, element) {
+                $(element).addClass("error Red");
+                // $('input#name_input.error').addClass("error Red");
+                // $('input#company_name_input.error').addClass("error Red");
+                // $('input#phone.error').addClass("error Red");
+                // $('input#email_input.error').addClass("error Red");
+                // $('input#agree.error.Red,label').addClass("error Red");
+                // $('input#agree.error.Red,label#required').prepend("<b style='color:red;''>Please select this box</b>");
+                if (element.attr("type") == "tel") {
+                    error.insertBefore($(element).next($('#phone')));
+                } else {}
+                if (element.attr("type") == "checkbox") {
+                    $(element).addClass("checkbox-color");
+                    error.insertBefore($(element).next($('#required')));
+                } else {}
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: "https://api.apispreadsheets.com/data/20947/",
+                    type: "post",
+                    data: $("#contact_form").serializeArray(),
+                    success: function() {
+                        alert("Form Data Submitted :)")
+                    },
+                    error: function() {
+                        alert("There was an error :(")
+                    }
+                });
+            },
         });
+
     }
 </script>
 
@@ -352,13 +460,13 @@
         <form id="contact_form">
             <div class="name">
                 <label for="name"></label>
-                <input type="text" placeholder="Name*" name="Name" id="name_input" required>
+                <input type="text" placeholder="Name*" name="Name" id="name_input">
+                <span></span>
             </div>
             <div class="company_name">
                 <label for="company_name"></label>
-
-                <input type="text" placeholder="Company Name*" name="Company_Name" id="company_name_input" required>
-
+                <input type="text" placeholder="Company Name*" name="Company_Name" id="company_name_input">
+                <span></span>
             </div>
 
             <!-- <div class="country">
@@ -568,13 +676,17 @@
             </div>
             <div class="phone_number">
                 <label for="phone_number"></label>
-                <input type="tel" placeholder="Phone No.*" name="Phone_Number" id="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                <input type="tel" placeholder="Phone No.*" name="Phone_Number" id="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                 <span id="valid-msg" class="hide" style="color: green;">✓ Valid</span>
                 <span id="error-msg" class="hide" style="color: red;"></span>
+                <div hidden>
+                    <input type="text" name="Valid_Invalid" id="msg-input" value="">
+                    <input type="text" name="" id="msf-input-equalto" value="valid">
+                </div>
             </div>
             <div class="email">
                 <label for="email"></label>
-                <input type="email" placeholder="Email*" name="Email" id="email_input" required>
+                <input type="email" placeholder="Email-Id*" name="Email" id="email_input">
             </div>
 
             <div class="message">
@@ -590,7 +702,7 @@
                     interest to you.</small>
                 <br />
                 <br />
-                <input type="checkbox" name="I_Agreed" value="Yes,_I_Agreed" id="agree" required> &nbsp; &nbsp;I have read and agreed to the Terms and Conditions and Privacy Policy
+                <input type="checkbox" name="I_Agreed" value="Yes,_I_Agreed" id="agree" required> &nbsp; &nbsp;<label id="required">I have read and agreed to the Terms and Conditions and Privacy Policy</label>
             </div>
             <div hidden>
                 <input id="date" name="Date">
@@ -607,10 +719,11 @@
         <script>
             var input = document.querySelector("#phone"),
                 errorMsg = document.querySelector("#error-msg"),
+                errorMsginput = document.querySelector("#msg-input"),
                 validMsg = document.querySelector("#valid-msg");
 
             // Error messages based on the code returned from getValidationError
-            var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+            var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number", 'Valid'];
 
             // Initialise plugin
             var intl = window.intlTelInput(input, {
@@ -627,6 +740,7 @@
             var reset = function() {
                 input.classList.remove("error");
                 errorMsg.innerHTML = "";
+                errorMsginput.value = "";
                 errorMsg.classList.add("hide");
                 validMsg.classList.add("hide");
             };
@@ -644,11 +758,13 @@
                         $('#countryCode').val(getName);
                         // $('#dialCode').val("");
                         $('#dialCode').val(getCode);
+                        document.getElementById("msg-input").value = "valid";
 
                     } else {
                         input.classList.add("error");
                         var errorCode = intl.getValidationError();
                         errorMsg.innerHTML = errorMap[errorCode];
+                        document.getElementById("msg-input").value = errorMap[errorCode];
                         errorMsg.classList.remove("hide");
                     }
                 }
