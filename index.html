@@ -392,7 +392,7 @@
                 Company_Name: 'required',
                 Phone_Number: 'required',
                 Valid_Invalid: {
-                    equalTo: '#msf-input-equalto',
+                    required: true,
                 },
                 Email: {
                     required: true,
@@ -427,17 +427,22 @@
                 } else {}
             },
             submitHandler: function(form) {
-                $.ajax({
-                    url: "https://api.apispreadsheets.com/data/20947/",
-                    type: "post",
-                    data: $("#contact_form").serializeArray(),
-                    success: function() {
-                        alert("Form Data Submitted :)")
-                    },
-                    error: function() {
-                        alert("There was an error :(")
-                    }
-                });
+                if ($('#msg-input').val() == 'valid') {
+                    $.ajax({
+                        url: "https://api.apispreadsheets.com/data/20947/",
+                        type: "post",
+                        data: $("#contact_form").serializeArray(),
+                        success: function() {
+                            alert("Form Data Submitted : okay");
+                        },
+                        error: function() {
+                            alert("There was an error : okay");
+                        }
+                    });
+                } else {
+                    return false;
+                }
+
             },
         });
 
@@ -681,7 +686,6 @@
                 <span id="error-msg" class="hide" style="color: red;"></span>
                 <div hidden>
                     <input type="text" name="Valid_Invalid" id="msg-input" value="">
-                    <input type="text" name="" id="msf-input-equalto" value="valid">
                 </div>
             </div>
             <div class="email">
